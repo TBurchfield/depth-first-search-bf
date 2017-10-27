@@ -2,26 +2,27 @@
 
 This brainf*ck program performs depth first traversal of a binary tree.
 Preorder?  Postorder?  Inorder?
-Each node is represented as 7 cells.
-The furthest left is the distance from the value of the current node to the value of the left child, or 0 if there is no left child.
-The next furthest left is 1 if the left child is to the right, and 0 if the left child is to the left.
-The next furthest left is 1 if the left has been visited.
-The next furthest left is a "scratch pad".  Operations can rely on it being zero, and must return it to zero.
-The next furthest left is the value of the node.
 
-The furthest right is the distance from the current node to the value of the right child, or 0 if there is no right child.
-The next furthest right is 1 if the right child is to the right, and 0 if the right child is to the left.
-The next furthest right is 1 if the right has been visited.
-The next furthest right is the distance from the value of the current node to the value of the parent, or 0 if there is no parent.
-The next furthest right is 1 if the parent is to the right, and 0 if the parent is to the left.
+Each node is represented as:
+| 0 or PadLeftZ | 1 PadLeftO | distLeft | directionLeft | notVisitedLeft | scratchPad1 | scratchPad2 | value | directionParent | distParent | notVisitedRight | directionRight | distRight | 1 PadRightO | 0 PadRightZ |
 
-Or in other words, each node is represented as
-| distLeft | directionLeft | visitedLeft | scratchPad | value | directionParent | distParent | visitedRight | directionRight | distRight |
+The value is the value of the node.
+The padding on either side helps in moving from node to node.
+If changed, it must be returned to reflect the values above.
+directionX is 1 is the X is to the right, and 0 if the X is to the right.
+distanceX represents the distance from value of the current node to the value of the X node.
+notVisitedX is 1 if X has not yet been visited, and is otherwise 0
+Scratchpads are for scratchwork, and need not be returned to their original condition.  Keep this in mind.
 
-]
+Since this structure is changing often, constant moves that might change in other versions are denoted by FirstVarTOSecondVar_>>>(...)>>>_FirstVarTOSecondVar
+Where the amount of moves is the distance between FirstVar and SecondVar.  This aims to make changes as seamless as possible.
 
+Shorter variable names as follows:
+| plz           |      plo   |  dsl     | drl           | vl             | sp1         | sp2         | v     | drp             | dsp        |    vr           |     drr        |   dsr     |     pro     |    prz      |
+| 0 or PadLeftZ | 1 PadLeftO | distLeft | directionLeft | notVisitedLeft | scratchPad1 | scratchPad2 | value | directionParent | distParent | notVisitedRight | directionRight | distRight | 1 PadRightO | 0 PadRightZ |
 
-[
+======================================
+
 TODO
 Initialize tree example
 Move to root
@@ -40,5 +41,41 @@ if not (right visited) print current node
 
 go to parent, if it exists.  Otherwise, exit.
 )
+
+==============
+
+Assume we are on the parent value
 ]
+
+vTOdsl_<<<<_vTOdsl
+[                          if left exists
+  dslTOvl_>>_dslTOvl
+  [                          if left has not yet been visited
+    vlTOdrl_<_vlTOdrl
+    [                          if left node is to the right
+      drlTOsp1_>>_drlTOsp1       clear both scratchpads
+      [-]
+      sp1TOsp2_>_sp1TOsp2
+      [-]
+      sp2TOdsl_<<<<_sp2TOdsl
+      [                         copy the values into two scratchpads
+        -
+        dslTOsp1_>>>_dslTOsp1
+        +
+        sp1TOsp2_>_sp1TOsp2
+        +
+        sp2TOdsl_<<<<_sp2TOdsl
+      ]
+      dslTOsp1_>>>_dslTOsp1     move to scratchpad1, and copy it back to dsl
+      [
+        -
+        sp1TOdsl_<<<_sp1TOdsl
+        +
+        dslTOsp1_>>>_dslTOsp1
+      ]                        now dsl has correct value, and scratchpad has a copy of it.
+    ]
+  ]
+]
+
+
 
