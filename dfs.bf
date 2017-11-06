@@ -10,7 +10,7 @@ The value is the value of the node.
 The padding on either side helps in moving from node to node.
 If changed, it must be returned to reflect the values above.
 directionX is 1 is the X is to the right, and 0 if the X is to the right.
-distanceX represents the distance from value of the current node to the value of the X node.
+distanceX represents the distance from value of the current node to the closest ONE PAD of the X node.
 notVisitedX is 1 if X has not yet been visited, and is otherwise 0
 Scratchpads are for scratchwork, and need not be returned to their original condition.  Keep this in mind.
 
@@ -72,7 +72,21 @@ vTOdsl_<<<<_vTOdsl
         sp1TOdsl_<<<_sp1TOdsl
         +
         dslTOsp1_>>>_dslTOsp1
-      ]                        now dsl has correct value, and scratchpad has a copy of it.
+      ]                        now dsl has correct value, and scratchpad2 has a copy of it.
+      sp1TOsp2_>_sp1TOsp2
+      [
+        -
+        sp2TOprz_>>>>>>>>_sp2TOprz
+        +
+        przTOsp2_<<<<<<<<_przTOsp2
+      ]                           all has been moved to prz, now we must decrement it
+      sp2TOprz_--------_sp2TOprz  now it's time to move!
+      [
+        >
+        [ We've hit something.  Better check if it's the right node, otherwise we pass over.
+          
+        ]
+      ]
     ]
   ]
 ]
